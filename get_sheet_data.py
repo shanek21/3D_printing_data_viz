@@ -6,9 +6,6 @@ from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
-#plotting data -- plotly
-import plotly.plotly as py
-import plotly.graph_objs as go
 
 try:
     import argparse
@@ -52,16 +49,13 @@ def get_credentials():
     return credentials
 
 def get_data():
-    """Gets data from Google Sheet with print form responses and returns it as dictionary.
+    """Gets data from Google Sheet with print form responses and returns it as a list of the rows.
     parameters: none
     returns: list of lists --> list of rows of data
-    returns: dictionary of tuples --> dict[row_num] = ((purpose, print time))
 
     Pulls data from print form: https://docs.google.com/spreadsheets/d/1_etu4C5YXYpfngERdZUV7wIIIKNwiiUOYfgId8Tb2iE/edit#gid=2089240762
     """
     
-    data_dict = dict() #create data dictionary we'll be returning
-    data_lists = []
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
@@ -70,24 +64,16 @@ def get_data():
                               discoveryServiceUrl=discoveryUrl)
 
     spreadsheetId = '1_etu4C5YXYpfngERdZUV7wIIIKNwiiUOYfgId8Tb2iE' #ACTUAL ID
-    #GET PURPOSE LIST
-    rangeName = 'Form Responses 1' #sheet_name!cell range
+    rangeName = 'Form Responses 1!A2:I' #avoid first row -- format is 'sheet_name!cell range'
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
     values = result.get('values', []) #store values in list
-   
-    # #GET
-    # rangeName = 'Form Responses 1!H2:H' #sheet_name ! cell range
-    # result = service.spreadsheets().values().get(
-    #     spreadsheetId=spreadsheetId, range=rangeName).execute()
-    # duration_values = result.get('values', []) #store values in list
 
     if not values:
         print('No data found.')
+        return []
     else:
-        for row in values:
-        	data_lists.append(row)
+        return values
 
-
-if __name__ == '__main__':
-    get_data()
+# if __name__ == '__main__':
+#     get_data()
