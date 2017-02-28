@@ -1,2 +1,8 @@
+# Google API Client Stuff
 client_secret.json
+
+# Python compiled files
 *.pyc
+
+# Vim files
+*.swp
