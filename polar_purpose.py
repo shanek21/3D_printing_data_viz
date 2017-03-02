@@ -121,9 +121,9 @@ def plot_data():
         radialaxis=dict(
             ticksuffix=' prints'
         ),
-        orientation=270
+        orientation=270,
     )
-    fig = go.Figure(data=data, layout=layout)
+    fig = go.Figure(data=data, layout=layout) #categoryorder --> "category descending"
     py.iplot(fig, filename='test')
 
 if __name__ == '__main__':
